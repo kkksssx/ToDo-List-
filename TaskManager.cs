@@ -1,49 +1,50 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;//для коллекций
 using System.IO;//работа с файлом
 using System.Linq;
-
 public class TaskManager //класс для управления задачами
 {
     private readonly List<ToDoTask> _tasks = new List<ToDoTask>();//коллекция задач
     private readonly HashSet<int> _usedIds = new HashSet<int>(); //коллекция айдишников
     private readonly Random _random = new Random();//рандомайзер для айди
     private const string FilePath = "tasks.txt";//для сохранения
+    private readonly ProjectManager _projectManager;//ссылка на менеджер проетов
 
-    public TaskManager()
+    //конструктор
+    public TaskManager(ProjectManager projectManager)
     {
+        _projectManager = projectManager;
+        //установка обратной ссылки
+        _projectManager.SetTaskManager(this);
         LoadTasks();
     }
 
+
     //добавление задачис учетом вида
-    public void AddTask(string description, DateTime dueDate, string taskType = "default", string? project = null, int priority = 1)
+    public void AddTask(string description, DateTime dueDate, TaskType taskType, string? project = null, int priority = 1)
     {
-        if (string.IsNullOrWhiteSpace(description))
-            throw new ArgumentException("Описание задачи не может быть пустым");
-
-        ToDoTask task;
-        int id = GenerateId();
-        //выбор типа задачи
-        switch (taskType.ToLower())
-        {
-            case "work":
-                if (string.IsNullOrWhiteSpace(project))
-                    throw new ArgumentException("Для рабочей задачи необходимо указать проект");
-                task = new WorkTask(id, description, dueDate, project!);
-                break;
-
-            case "personal":
-                if (priority < 1 || priority > 10)
-                    throw new ArgumentException("Приоритет должен быть от 1 до 10");
-                task = new PersonalTask(id, description, dueDate, priority);
-                break;
-
-            default:
-                task = new ToDoTask(id, description, dueDate);
-                break;
-        }
-        //добавляем в список и сохраняем
+        int id = GenerateId(); // Генерируем уникальный ID
+        var task = TaskFactory.CreateTask(taskType, description, dueDate, project, priority, false, id);
         _tasks.Add(task);
+
+        // Если это рабочая задача с проектом, добавляем в проект
+        if (task is WorkTask workTask && !string.IsNullOrEmpty(project) && _projectManager != null)
+        {
+            var existingProject = _projectManager.FindProjectByName(project);
+            if (existingProject == null)
+            {
+                _projectManager.AddProject(project, $"Проект для задач: {project}");
+                existingProject = _projectManager.FindProjectByName(project);
+            }
+
+            if (existingProject != null)
+            {
+                // ИСПРАВЛЕННЫЙ ВЫЗОВ - передаем название проекта, а не ID
+                _projectManager.AddTaskToProjectSafe(project, task.Id); // project - string, а не existingProject.Id - int
+            }
+        }
+
         SaveTasks();
     }
 
@@ -57,12 +58,19 @@ public class TaskManager //класс для управления задачам
         SaveTasks();
         return true;
     }
-
+//удаление хадачи
     public bool RemoveTask(int taskId)
     {
         var task = FindTaskById(taskId);
         if (task == null) return false;
-        //удаляем из списка задач и айди
+
+        //удаляем задачу из проектов
+        if (task is WorkTask workTask && !string.IsNullOrEmpty(workTask.Project))
+        {
+            //передаем название проекта, а не айди проекта
+            _projectManager?.RemoveTaskFromProjectSafe(workTask.Project, taskId);
+        }
+
         _tasks.Remove(task);
         _usedIds.Remove(task.Id);
         SaveTasks();
@@ -105,17 +113,32 @@ public class TaskManager //класс для управления задачам
                    .OrderByDescending(t => t.Priority)//сначала задачи с высоким приоритетом
                    .ThenBy(t => t.DueDate);//потом по сроку выполнения
     }
-
+    //получение задач по проекту
+    public IEnumerable<ToDoTask> GetTasksByProject(string projectName)
+    {
+        return _tasks.OfType<WorkTask>()
+                    .Where(t => t.Project == projectName)
+                    .Cast<ToDoTask>();
+    }
     //ищет задачу по айди с возможным значением null
-    private ToDoTask? FindTaskById(int taskId) => _tasks.FirstOrDefault(t => t.Id == taskId);
+    public ToDoTask? FindTaskById(int taskId) => _tasks.FirstOrDefault(t => t.Id == taskId);
 
     //генерирует случайный айди и проверяет чтобы не повторялся
     private int GenerateId()
     {
         int newId;
+        int attempts = 0;
+        const int maxAttempts = 10; // Защита от бесконечного цикла
+
         do
         {
-            newId = _random.Next(100, 1000);
+            newId = _random.Next(100, 1000); 
+            attempts++;
+
+            if (attempts > maxAttempts)
+            {
+                throw new InvalidOperationException("Не удалось сгенерировать уникальный ID");
+            }
         } while (_usedIds.Contains(newId));
 
         _usedIds.Add(newId);
@@ -126,23 +149,32 @@ public class TaskManager //класс для управления задачам
     private void LoadTasks()
     {
         if (!File.Exists(FilePath)) return;
-        //перебирает каждую строку по очереди начиная с текущей и возращает массив строк
+
         foreach (string line in File.ReadAllLines(FilePath))
         {
-            if (string.IsNullOrWhiteSpace(line)) continue;//пропускает пустые
-            //разбивает и проверяет строку на корректное количество частей 
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
             var parts = line.Split('|');
             if (parts.Length < 4) continue;
 
             try
             {
                 ToDoTask task;
-                //извлечение данных
                 int id = int.Parse(parts[0]);
                 string description = parts[1];
                 DateTime dueDate = new DateTime(long.Parse(parts[2]));
                 bool isCompleted = bool.Parse(parts[3]);
-                //определение типа задачи
+
+                //проверяем на дубликат 
+                if (_usedIds.Contains(id))
+                {
+                    Console.WriteLine($"Обнаружен дубликат ID: {id}. Задача будет пропущена.");
+                    continue;
+                }
+
+                //добавляем айди в коллекцию использованных
+                _usedIds.Add(id);
+
                 if (parts.Length == 6 && parts[4] == "Work")
                 {
                     task = new WorkTask(id, description, dueDate, parts[5], isCompleted);
@@ -157,13 +189,15 @@ public class TaskManager //класс для управления задачам
                 }
 
                 _tasks.Add(task);
-                _usedIds.Add(task.Id);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка при загрузке задачи: {ex.Message}");
             }
         }
+
+        //после загрузки проверяем и исправляем дубликаты
+        FixDuplicateIds();
     }
 
     //сохраняет задачи в файл
@@ -188,6 +222,124 @@ public class TaskManager //класс для управления задачам
         catch (Exception ex)
         {
             Console.WriteLine($"Ошибка при сохранении задач: {ex.Message}");
+        }
+    }
+
+    //изменения задачи 
+    public bool EditTask(int taskId, string? newDescription, DateTime? newDueDate, string? newProject, int? newPriority)
+    {
+        var task = FindTaskById(taskId);
+        if (task == null) return false;
+
+        //запоминаем старый проект для рабочих задач
+        string? oldProject = (task as WorkTask)?.Project;
+        bool changesMade = false;
+
+        //изменение описания
+        if (!string.IsNullOrWhiteSpace(newDescription))
+        {
+            task.Description = newDescription;
+            changesMade = true;
+        }
+
+        //изменение даты выполнения
+        if (newDueDate.HasValue)
+        {
+            task.DueDate = newDueDate.Value;
+            changesMade = true;
+        }
+
+        //изменение проекта для рабочих задач
+        if (task is WorkTask workTask && newProject != null)
+        {
+            if (string.IsNullOrWhiteSpace(newProject))
+                throw new ArgumentException("Проект не может быть пустым");
+
+            workTask.Project = newProject;
+            changesMade = true;
+        }
+
+        //изменение приоритета для личных задач
+        if (task is PersonalTask personalTask && newPriority.HasValue)
+        {
+            if (newPriority < 1 || newPriority > 10)
+                throw new ArgumentException("Приоритет должен быть от 1 до 10");
+
+            personalTask.Priority = newPriority.Value;
+            changesMade = true;
+        }
+
+        //безопасное обновление привязки к проектам
+        UpdateProjectAssociation(taskId, task, oldProject, newProject);
+
+        if (changesMade)
+        {
+            SaveTasks();
+        }
+
+        return changesMade;
+    }
+
+    private void UpdateProjectAssociation(int taskId, ToDoTask task, string? oldProject, string? newProject)
+    {
+        //работаем только с projectManager и рабочими задачами
+        if (_projectManager == null || task is not WorkTask) return;
+
+        //если проект не изменился ничего не делаем
+        if (oldProject == newProject) return;
+
+        //удаляем из старого проекта
+        _projectManager.RemoveTaskFromProjectSafe(oldProject, taskId);
+
+        //добавляем в новый 
+        _projectManager.AddTaskToProjectSafe(newProject, taskId);
+    }
+    public bool IsIdUnique(int id) => !_usedIds.Contains(id);
+
+    // для исправления дубликатов
+    public void FixDuplicateIds()
+    {
+        var duplicates = _tasks
+            .GroupBy(t => t.Id)
+            .Where(g => g.Count() > 1)
+            .ToList();
+
+        foreach (var group in duplicates)
+        {
+            //первую задачу оставляем с оригинальным 
+            var firstTask = group.First();
+
+            //остальным задачам назначаем новые
+            foreach (var task in group.Skip(1))
+            {
+                _tasks.Remove(task);
+                _usedIds.Remove(task.Id);
+
+                int newId = GenerateId();
+
+                //создаем новую задачу с тем же содержимым но новым айди
+                ToDoTask newTask;
+                if (task is WorkTask workTask)
+                {
+                    newTask = new WorkTask(newId, workTask.Description, workTask.DueDate, workTask.Project, workTask.IsCompleted);
+                }
+                else if (task is PersonalTask personalTask)
+                {
+                    newTask = new PersonalTask(newId, personalTask.Description, personalTask.DueDate, personalTask.Priority, personalTask.IsCompleted);
+                }
+                else
+                {
+                    newTask = new ToDoTask(newId, task.Description, task.DueDate, task.IsCompleted);
+                }
+
+                _tasks.Add(newTask);
+            }
+        }
+
+        if (duplicates.Any())
+        {
+            SaveTasks();
+            Console.WriteLine($"Исправлено {duplicates.Count} дубликатов ID");
         }
     }
 }

@@ -3,17 +3,14 @@
 public class ToDoTask //Основной класс для задачи
 {
     public int Id { get; }
-    public string Description { get; }
-    public DateTime DueDate { get; protected set; } //protected для того чтобы можно было изменять только в классе
+    public string Description { get; set; }
+    public DateTime DueDate { get; set; } 
     public bool IsCompleted { get; protected set; }
 
     public ToDoTask(int id, string description, DateTime dueDate, bool isCompleted = false)
     {    //валидация
-        if (string.IsNullOrWhiteSpace(description))
-            throw new ArgumentException("Описание задачи не может быть пустым");
-        
-        if (dueDate != DateTime.MinValue && dueDate < DateTime.Today)
-            throw new ArgumentException("Дата выполнения должна быть в настоящем или будущем");
+        TaskValidator.ValidateDescription(description); 
+        TaskValidator.ValidateDueDate(dueDate);
         //значения для свойств
         Id = id;
         Description = description ?? throw new ArgumentNullException(nameof(description));//если нулевое описание вызываем исключение 

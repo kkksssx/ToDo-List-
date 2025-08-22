@@ -1,0 +1,15 @@
+D:\List\bin\Debug\net8.0\List.exe
+D:\List\bin\Debug\net8.0\List.deps.json
+D:\List\bin\Debug\net8.0\List.runtimeconfig.json
+D:\List\bin\Debug\net8.0\List.dll
+D:\List\bin\Debug\net8.0\List.pdb
+D:\List\obj\Debug\net8.0\List.GeneratedMSBuildEditorConfig.editorconfig
+D:\List\obj\Debug\net8.0\List.AssemblyInfoInputs.cache
+D:\List\obj\Debug\net8.0\List.AssemblyInfo.cs
+D:\List\obj\Debug\net8.0\List.csproj.CoreCompileInputs.cache
+D:\List\obj\Debug\net8.0\List.sourcelink.json
+D:\List\obj\Debug\net8.0\List.dll
+D:\List\obj\Debug\net8.0\refint\List.dll
+D:\List\obj\Debug\net8.0\List.pdb
+D:\List\obj\Debug\net8.0\List.genruntimeconfig.cache
+D:\List\obj\Debug\net8.0\ref\List.dll

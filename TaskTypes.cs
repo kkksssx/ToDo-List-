@@ -1,5 +1,10 @@
 ﻿using System;
-
+public enum TaskType //тип определитель, который помогает не допускать ошибки
+{                    //редактор будет до сборки говорить, что ты дурачок если опечатаешься 
+    Default,
+    Work,
+    Personal
+}
 //класс рабочей задачи наследуем от основного c доп project
 public class WorkTask : ToDoTask
 {
@@ -8,7 +13,8 @@ public class WorkTask : ToDoTask
     public WorkTask(int id, string description, DateTime dueDate, string project, bool isCompleted = false)
         : base(id, description, dueDate, isCompleted) //принимает и преедаёт параметры в базовый 
     {
-        Project = project ?? throw new ArgumentNullException(nameof(project));
+        TaskValidator.ValidateProject(project);
+        Project = project;
     }
 
     //переопределение 
@@ -29,9 +35,7 @@ public class PersonalTask : ToDoTask
     public PersonalTask(int id, string description, DateTime dueDate, int priority, bool isCompleted = false)
         : base(id, description, dueDate, isCompleted)
     {
-        if (priority < 1 || priority > 10)
-            throw new ArgumentException("Приоритет должен быть от 1 до 10");
-
+        TaskValidator.ValidatePriority(priority);
         Priority = priority;
     }
 
