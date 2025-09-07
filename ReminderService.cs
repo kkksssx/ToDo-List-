@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Linq;//Для работы с LINQ (Language Integrated Query) - технологии запросов к коллекциям и данным
 using System.Threading; //для timer-неуправляемый ресурс 
 //неуправляемые чистим вручную
 //класс для проверки и напоминании о важным 

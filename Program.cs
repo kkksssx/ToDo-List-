@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;//для работы с асинхронностью и задачами(.Run)
-using System.Linq;
-using System.Text;
+using System.Linq;//Для работы с LINQ (Language Integrated Query) - технологии запросов к коллекциям и данным
+using System.Text;//Для работы со строками, кодировками и построения текста
+using System.Collections.Generic;
+using FluentValidation.Results;//для работы с результатами валидации, возвращаемыми библиотекой FluentValidation
+using Microsoft.Extensions.DependencyInjection;
+//директива в языке C#, которая импортирует пространство имен Microsoft.Extensions.DependencyInjection, содержащее типы для реализации паттерна "внедрение зависимостей" (Dependency Injection, DI)
 
 //класс приложения с main
 public class Program
@@ -15,55 +19,88 @@ public class Program
         Console.OutputEncoding = Encoding.UTF8;//кодировка для поддержки юникод
         try
         {
-            _projectManager = new ProjectManager();
+            //настройка Dependency Injection- Внедрение зависимости (Dependency injection, DI) — процесс предоставления внешней зависимости программному компоненту
+            var serviceProvider = ConfigureServices();
 
-            _taskManager = new TaskManager(_projectManager);
-            //обратную ссылку в ProjectManager
+            //получение экземпляров через DI
+            _projectManager = serviceProvider.GetService<ProjectManager>()!;
+            _taskManager = serviceProvider.GetService<TaskManager>()!;
+
+            //установка обратной ссылки
             _projectManager.SetTaskManager(_taskManager);
-
-            if (_taskManager == null || _projectManager == null)
-            {
-                Console.WriteLine("Ошибка: Менеджеры не были инициализированы");
-                return;
-            }
 
             _reminderService = new ReminderService(_taskManager);
 
-            //фоновая проверка напоминаний (Task.Run()-запускает асинхронную задачу на фоне)
+            //запуск фоновой проверки напоминаний
             Task.Run(() => _reminderService.CheckReminders());
+
             Console.WriteLine("Система управления задачами с напоминаниями");
 
-            while (true)
-            {
-                DisplayMenu();
-                var choice = Console.ReadLine();
-
-                switch (choice)
-                {
-                    case "1": AddTask(); break;
-                    case "2": AddProject(); break;
-                    case "3": MarkTaskAsDone(); break;
-                    case "4": DisplayAllTasks(); break;
-                    case "5": DisplayAllProjects(); break;
-                    case "6": RemoveTask(); break;
-                    case "7": EditTask(); break;
-                    case "8": RemoveProject(); break;
-                    case "9":
-                        _reminderService?.Dispose();//освобождение ресурсов
-                        Console.WriteLine("Выход из программы...");
-                        return;
-                    default:
-                        Console.WriteLine("\nНеверный выбор, введите число от 1 до 9.");
-                        WaitForUserInput();
-                        break;
-                }
-            }
+            MainMenuLoop();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Ошибка инициализации: {ex.Message}");
             Console.WriteLine("Нажмите любую клавишу для выхода...");
             Console.ReadKey();
+        }
+    }
+
+    private static IServiceProvider ConfigureServices()
+    {
+        var services = new ServiceCollection();
+
+        Console.WriteLine("Выберите тип хранилища:");
+        Console.WriteLine("1 - InMemory (в памяти)");
+        Console.WriteLine("2 - JsonFile (файлы JSON)");
+
+        var choice = Console.ReadLine();
+
+        if (choice == "1")
+        {
+            // InMemory хранилище (данные только в оперативной памяти)
+            services.AddSingleton<ITaskStorage, InMemoryTaskStorage>();
+            services.AddSingleton<IProjectStorage, InMemoryProjectStorage>();
+        }
+        else
+        {
+            // Файловое JSON хранилище (данные сохраняются в файлы)
+            services.AddSingleton<ITaskStorage, JsonFileTaskStorage>();
+            services.AddSingleton<IProjectStorage, JsonFileProjectStorage>();
+        }
+        //регистрация менеджеров
+        services.AddSingleton<ProjectManager>();
+        services.AddSingleton<TaskManager>();
+
+        return services.BuildServiceProvider();//сборка провайдера сервисов
+    }
+
+    private static void MainMenuLoop()
+    {
+        while (true)
+        {
+            DisplayMenu();
+            var choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1": AddTask(); break;
+                case "2": AddProject(); break;
+                case "3": MarkTaskAsDone(); break;
+                case "4": DisplayAllTasks(); break;
+                case "5": DisplayAllProjects(); break;
+                case "6": RemoveTask(); break;
+                case "7": EditTask(); break;
+                case "8": RemoveProject(); break;
+                case "9":
+                    _reminderService?.Dispose();
+                    Console.WriteLine("Выход из программы...");
+                    return;
+                default:
+                    Console.WriteLine("\nНеверный выбор, введите число от 1 до 9.");
+                    WaitForUserInput();
+                    break;
+            }
         }
     }
 
@@ -101,7 +138,7 @@ public class Program
                 "1" => TaskType.Default,
                 "2" => TaskType.Work,
                 "3" => TaskType.Personal,
-                _ => throw new ArgumentException("Неверный выбор типа задачи")
+                _ => throw new ValidationException("Неверный тип задачи")
             };
 
             string? project = null;
@@ -120,25 +157,18 @@ public class Program
             //для личных
             if (taskType == TaskType.Personal)
             {
-                priority = TaskValidator.GetValidatedInput(
-                    "Введите приоритет (1-10): ",
-                    TaskValidator.ValidateAndGetPriority
-                );
+                priority = InputService.GetPriorityInput();
             }
 
-            string description = TaskValidator.GetValidatedInput(
-                "\nВведите описание задачи: ",
-                input => TaskValidator.ValidateAndGetDescription(input, "Описание задачи")
-            );
+            string description = InputService.GetDescriptionInput("Описание задачи");
+            DateTime dueDate = InputService.GetDueDateInput();
 
-            DateTime dueDate = TaskValidator.GetValidatedInput(
-                "Введите срок выполнения (дд.мм.гггг или Enter для пропуска): ",
-                TaskValidator.ValidateAndGetDueDate
-            );
-
-            //для создания объектов используем фабрику
             _taskManager.AddTask(description, dueDate, taskType, project, priority);
             Console.WriteLine("\nЗадача добавлена успешно!");
+        }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n Ошибка валидации: {ex.Message}");
         }
         catch (Exception ex)
         {
@@ -165,7 +195,7 @@ public class Program
             Console.WriteLine($"{existingProjects.Count + 1}. Создать новый проект");
             Console.WriteLine($"{existingProjects.Count + 2}. Отмена");
 
-            int choice = TaskValidator.GetValidatedInput(
+            int choice = InputService.GetValidatedInput(
                 "\nВыберите проект или действие: ",
                 input =>
                 {
@@ -199,7 +229,7 @@ public class Program
             Console.WriteLine("1. Создать новый проект");
             Console.WriteLine("2. Отмена");
 
-            int choice = TaskValidator.GetValidatedInput(
+            int choice = InputService.GetValidatedInput(
                 "Выберите действие: ",
                 input =>
                 {
@@ -222,48 +252,24 @@ public class Program
     {
         try
         {
-            string name = TaskValidator.GetValidatedInput(
-                "Введите название нового проекта: ",
-                input =>
-                {
-                    if (string.IsNullOrWhiteSpace(input))
-                        throw new ArgumentException("Название не может быть пустым");
+            string name = InputService.GetProjectNameInput(_projectManager);
+            string description = InputService.GetDescriptionInput("Описание проекта");
 
-                    if (_projectManager.FindProjectByName(input) != null)
-                        throw new ArgumentException("Проект с таким названием уже существует");
-
-                    return input;
-                }
-            );
-
-            string description = TaskValidator.GetValidatedInput(
-                "Введите описание проекта: ",
-                input =>
-                {
-                    if (string.IsNullOrWhiteSpace(input))
-                        throw new ArgumentException("Описание не может быть пустым");
-                    return input;
-                }
-            );
-
-            DateTime? deadline = TaskValidator.GetValidatedInput(
+            DateTime? deadline = InputService.GetValidatedInput(
                 "Введите срок проекта (дд.мм.гггг или Enter для пропуска): ",
                 input => string.IsNullOrEmpty(input) ? (DateTime?)null : DateTime.Parse(input)
             );
 
-            int priority = TaskValidator.GetValidatedInput(
-                "Введите приоритет проекта (1-10): ",
-                input =>
-                {
-                    if (!int.TryParse(input, out int p) || p < 1 || p > 10)
-                        throw new ArgumentException("Приоритет должен быть числом от 1 до 10");
-                    return p;
-                }
-            );
+            int priority = InputService.GetPriorityInput();
 
             _projectManager.AddProject(name, description, deadline, priority);
             Console.WriteLine($"\nПроект '{name}' создан успешно!");
             return name;
+        }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n Ошибка валидации: {ex.Message}");
+            return null;
         }
         catch (Exception ex)
         {
@@ -271,24 +277,16 @@ public class Program
             return null;
         }
     }
-
     //отметка задачи как выполненная 
     private static void MarkTaskAsDone()
     {
         try
         {
-            var tasks = TaskValidator.ValidateTasksExist(_taskManager.GetAllTasks(), "отметки как выполненной");
+            var tasks = TaskValidationService.ValidateTasksExist(_taskManager.GetAllTasks(), "отметки как выполненной");
             DisplayTasksForSelection();
 
-            int id = TaskValidator.GetValidatedInput(
-                "\nВведите ID задачи для отметки как выполненной: ",
-                TaskValidator.ValidateAndGetTaskId
-            );
-
-            var task = TaskValidator.ValidateTaskExists(
-                tasks.FirstOrDefault(t => t.Id == id),
-                id
-            );
+            int id = InputService.GetTaskIdInput();
+            var task = TaskValidationService.ValidateTaskExists(tasks.FirstOrDefault(t => t.Id == id), id);
 
             if (task.IsCompleted)
             {
@@ -304,6 +302,10 @@ public class Program
             {
                 Console.WriteLine($"\n Задача с ID {id} не найдена.");
             }
+        }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n Ошибка валидации: {ex.Message}");
         }
         catch (Exception ex)
         {
@@ -327,24 +329,14 @@ public class Program
     {
         try
         {
-            var tasks = TaskValidator.ValidateTasksExist(_taskManager.GetAllTasks(), "удаления");
+            var tasks = TaskValidationService.ValidateTasksExist(_taskManager.GetAllTasks(), "удаления");
             DisplayTasksForSelection();
 
-            int id = TaskValidator.GetValidatedInput(
-                "\nВведите ID задачи для удаления: ",
-                TaskValidator.ValidateAndGetTaskId
-            );
+            int id = InputService.GetTaskIdInput();
+            var task = TaskValidationService.ValidateTaskExists(tasks.FirstOrDefault(t => t.Id == id), id);
 
-            var task = TaskValidator.ValidateTaskExists(
-                tasks.FirstOrDefault(t => t.Id == id),
-                id
-            );
-
-            //подтверждение удаления
-            Console.Write($"\nВы уверены, что хотите удалить задачу \"{task.Description}\"? (y/n): ");
-            var confirmation = Console.ReadLine()?.ToLower();
-
-            if (confirmation != "y" && confirmation != "yes" && confirmation != "д" && confirmation != "да")
+            bool confirm = InputService.GetConfirmationInput($"Вы уверены, что хотите удалить задачу \"{task.Description}\"?");
+            if (!confirm)
             {
                 Console.WriteLine("Удаление отменено.");
                 return;
@@ -359,6 +351,10 @@ public class Program
                 Console.WriteLine($"\n Задача с ID {id} не найдена");
             }
         }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n Ошибка валидации: {ex.Message}");
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"\n Ошибка: {ex.Message}");
@@ -368,6 +364,7 @@ public class Program
             WaitForUserInput();
         }
     }
+
 
     //выводит список задач по категориям
     private static void DisplayTasksForSelection()
@@ -436,19 +433,11 @@ public class Program
     {
         try
         {
-            var tasks = TaskValidator.ValidateTasksExist(_taskManager.GetAllTasks(), "редактирования");
+            var tasks = TaskValidationService.ValidateTasksExist(_taskManager.GetAllTasks(), "редактирования");
             DisplayTasksForSelection();
 
-            int taskId = TaskValidator.GetValidatedInput(
-                "\nВведите ID задачи для редактирования: ",
-                TaskValidator.ValidateAndGetTaskId
-            );
-
-            var task = TaskValidator.ValidateTaskExists(
-                tasks.FirstOrDefault(t => t.Id == taskId),
-                taskId
-            );
-
+            int taskId = InputService.GetTaskIdInput();
+            var task = TaskValidationService.ValidateTaskExists(tasks.FirstOrDefault(t => t.Id == taskId), taskId);
             Console.WriteLine($"\nРедактирование задачи: {task}");
             Console.WriteLine("Какие поля вы хотите изменить?");
             Console.WriteLine("1. Описание");
@@ -465,10 +454,23 @@ public class Program
 
             Console.WriteLine("0. Отмена");
 
-            string fieldChoice = TaskValidator.GetValidatedInput(
-                "Выберите поле для изменения: ",
-                input => TaskValidator.ValidateFieldChoice(input, task)
-            );
+            string fieldChoice = InputService.GetValidatedInput(
+                 "Выберите поле для изменения: ",
+                 input =>
+                 {
+                     var validChoices = new[] { "1", "2", "3", "0" };
+                     if (!validChoices.Contains(input))
+                         throw new ValidationException("Неверный выбор. Введите 1, 2, 3 или 0");
+
+                     if (input == "3")
+                     {
+                         if (task is not WorkTask && task is not PersonalTask)
+                             throw new ValidationException("Это поле недоступно для данного типа задачи");
+                     }
+
+                     return input;
+                 }
+             );
 
             if (fieldChoice == "0")
             {
@@ -484,52 +486,37 @@ public class Program
             switch (fieldChoice)
             {
                 case "1":
-                    newDescription = TaskValidator.GetValidatedInput(
-                        "Введите новое описание: ",
-                        input => TaskValidator.ValidateAndGetDescription(input, "Описание")
-                    );
+                    newDescription = InputService.GetDescriptionInput("новое описание");
                     break;
 
                 case "2":
-                    //проверяем доступность редактирования даты
-                    TaskValidator.ValidateFieldAccessibility(task, "DueDate");
-
-                    newDueDate = TaskValidator.GetValidatedInput(
-                        "Введите новый срок выполнения (дд.мм.гггг): ",
-                        TaskValidator.ValidateAndGetDueDate
-                    );
+                    TaskValidationService.ValidateTaskNotCompleted(task, "изменения даты");
+                    newDueDate = InputService.GetDueDateInput(false);
                     break;
 
                 case "3" when task is WorkTask:
-                    //проверяем доступность редактирования проекта
-                    TaskValidator.ValidateFieldAccessibility(task, "Project");
-
-                    newProject = TaskValidator.GetValidatedInput(
+                    TaskValidationService.ValidateTaskNotCompleted(task, "изменения проекта");
+                    newProject = InputService.GetValidatedInput(
                         "Введите новый проект: ",
-                        TaskValidator.ValidateAndGetProject
+                        input =>
+                        {
+                            TaskValidationService.ValidateProject(input);
+                            return input;
+                        }
                     );
                     break;
 
                 case "3" when task is PersonalTask:
-                    //проверяем доступность редактирования приоритета
-                    TaskValidator.ValidateFieldAccessibility(task, "Priority");
-
-                    newPriority = TaskValidator.GetValidatedInput(
-                        "Введите новый приоритет (1-10): ",
-                        TaskValidator.ValidateAndGetPriority
-                    );
+                    TaskValidationService.ValidateTaskNotCompleted(task, "изменения приоритета");
+                    newPriority = InputService.GetPriorityInput();
                     break;
             }
 
-            //проверяем, что хотя бы один параметр был изменен
-            if (!TaskValidator.HasEditParameters(newDescription, newDueDate, newProject, newPriority))
+            if (newDescription == null && !newDueDate.HasValue && newProject == null && !newPriority.HasValue)
             {
                 Console.WriteLine("Не указаны параметры для редактирования.");
                 return;
             }
-
-            //валидация всех параметров перед отправкой
-            TaskValidator.ValidateTaskEditParameters(task, newDescription, newDueDate, newProject, newPriority);
 
             if (_taskManager.EditTask(taskId, newDescription, newDueDate, newProject, newPriority))
             {
@@ -540,6 +527,10 @@ public class Program
                 Console.WriteLine($"\n Не удалось отредактировать задачу с ID {taskId}.");
             }
         }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n Ошибка валидации: {ex.Message}");
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"\n Ошибка при редактировании задачи: {ex.Message}");
@@ -549,54 +540,27 @@ public class Program
             WaitForUserInput();
         }
     }
-
     //добавление проекта
     private static void AddProject()
     {
         try
         {
-            string name = TaskValidator.GetValidatedInput(
-                "Введите название проекта: ",
-                input =>
-                {
-                    if (string.IsNullOrWhiteSpace(input))
-                        throw new ArgumentException("Название не может быть пустым");
+            string name = InputService.GetProjectNameInput(_projectManager);
+            string description = InputService.GetDescriptionInput("Описание проекта");
 
-                    //проверка уникальности имени
-                    if (_projectManager.FindProjectByName(input) != null)
-                        throw new ArgumentException("Проект с таким названием уже существует");
-
-                    return input;
-                }
-            );
-
-            string description = TaskValidator.GetValidatedInput(
-                "Введите описание проекта: ",
-                input =>
-                {
-                    if (string.IsNullOrWhiteSpace(input))
-                        throw new ArgumentException("Описание не может быть пустым");
-                    return input;
-                }
-            );
-
-            DateTime? deadline = TaskValidator.GetValidatedInput(
+            DateTime? deadline = InputService.GetValidatedInput(
                 "Введите срок проекта (дд.мм.гггг или Enter для пропуска): ",
                 input => string.IsNullOrEmpty(input) ? (DateTime?)null : DateTime.Parse(input)
             );
 
-            int priority = TaskValidator.GetValidatedInput(
-                "Введите приоритет проекта (1-10): ",
-                input =>
-                {
-                    if (!int.TryParse(input, out int p) || p < 1 || p > 10)
-                        throw new ArgumentException("Приоритет должен быть числом от 1 до 10");
-                    return p;
-                }
-            );
+            int priority = InputService.GetPriorityInput();
 
             _projectManager.AddProject(name, description, deadline, priority);
             Console.WriteLine("\n Проект добавлен успешно!");
+        }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n Ошибка валидации: {ex.Message}");
         }
         catch (Exception ex)
         {
@@ -658,19 +622,21 @@ public class Program
                 Console.WriteLine($"#{project.Id} - {project.Name}");
             }
 
-            int projectId = TaskValidator.GetValidatedInput(
-                "\nВведите ID проекта для удаления: ",
-                input =>
-                {
-                    if (!int.TryParse(input, out int id))
-                        throw new ArgumentException("Введите корректный числовой ID");
+            int projectId = InputService.GetProjectIdInput();
+            var projectToRemove = _projectManager.FindProjectById(projectId);
 
-                    if (_projectManager.FindProjectById(id) == null)
-                        throw new ArgumentException("Проект с таким ID не найден");
+            if (projectToRemove == null)
+            {
+                Console.WriteLine("Проект с таким ID не найден");
+                return;
+            }
 
-                    return id;
-                }
-            );
+            bool confirm = InputService.GetConfirmationInput($"Вы уверены, что хотите удалить проект \"{projectToRemove.Name}\"?");
+            if (!confirm)
+            {
+                Console.WriteLine("Удаление отменено.");
+                return;
+            }
 
             if (_projectManager.RemoveProject(projectId))
             {
@@ -680,6 +646,10 @@ public class Program
             {
                 Console.WriteLine("\n Не удалось удалить проект.");
             }
+        }
+        catch (ValidationException ex)
+        {
+            Console.WriteLine($"\n Ошибка валидации: {ex.Message}");
         }
         catch (Exception ex)
         {

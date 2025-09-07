@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Collections.Generic;//коллекций
+using System.IO;// Для работы с файловой системой, потоками данных и операциями ввода-вывода.
+using System.Linq;//Для работы с LINQ (Language Integrated Query) - технологии запросов к коллекциям и данным
+using System.Threading.Tasks;//фундаментальная часть .NET для асинхронного программирования
 
 //класс для управления проектами
 public class ProjectManager
 {
     private readonly List<Project> _projects = new List<Project>();//коллекция хранения проектов
     private readonly HashSet<int> _usedIds = new HashSet<int>();//их айди
-    private const string FilePath = "projects.txt";
+    // private const string FilePath = "projects.txt";
+    private readonly Random _random = new Random();
+    private readonly IProjectStorage _projectStorage;
     private TaskManager? _taskManager;//ссыдка на менеджер задач
 
     //для установки ссылки на менеджер задач после создания объекта
@@ -18,9 +20,9 @@ public class ProjectManager
         _taskManager = taskManager;
     }
     //конструктор инициализирует и загружает из файла проекты
-    public ProjectManager(TaskManager? taskManager = null)
+    public ProjectManager(IProjectStorage projectStorage)
     {
-        _taskManager = taskManager;
+        _projectStorage = projectStorage;
         LoadProjects();
     }
 
@@ -126,43 +128,16 @@ public class ProjectManager
     //загрузка проектов
     private void LoadProjects()
     {
-        if (!File.Exists(FilePath)) return;//проверяет существование
+        _projects.Clear();
+        _usedIds.Clear();
 
-        foreach (string line in File.ReadAllLines(FilePath))
+        var loadedProjects = _projectStorage.LoadProjects();
+        foreach (var project in loadedProjects)
         {
-            if (string.IsNullOrWhiteSpace(line)) continue;
-            //разделяет строку и обрабатывает каждую часть
-            var parts = line.Split('|');
-            if (parts.Length < 6) continue;
-
-            try
+            if (!_usedIds.Contains(project.Id))
             {
-                int id = int.Parse(parts[0]);
-                string name = parts[1];
-                string description = parts[2];
-                DateTime createdDate = new DateTime(long.Parse(parts[3]));
-                DateTime? deadline = string.IsNullOrEmpty(parts[4]) ? null : new DateTime(long.Parse(parts[4]));
-                int priority = int.Parse(parts[5]);
-                bool isCompleted = bool.Parse(parts[6]);
-
-                var project = new Project(id, name, description, deadline, priority, isCompleted);
-
-                //загружаем айди задач
-                if (parts.Length > 7 && !string.IsNullOrEmpty(parts[7]))
-                {
-                    var taskIds = parts[7].Split(',').Select(int.Parse);
-                    foreach (var taskId in taskIds)
-                    {
-                        project.AddTask(taskId);
-                    }
-                }
-
                 _projects.Add(project);
-                _usedIds.Add(id);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка при загрузке проекта: {ex.Message}");
+                _usedIds.Add(project.Id);
             }
         }
     }
@@ -170,30 +145,13 @@ public class ProjectManager
     //сохранение проектов
     private void SaveProjects()
     {
-        try
-        {   //преобразуем каждый проект в строку для сохранения
-            var lines = _projects.Select(p =>
-            {
-                string taskIds = p.TaskIds.Any() ? string.Join(",", p.TaskIds) : "";
-                return $"{p.Id}|{p.Name}|{p.Description}|{p.CreatedDate.Ticks}|{(p.Deadline.HasValue ? p.Deadline.Value.Ticks.ToString() : "")}|{p.Priority}|{p.IsCompleted}|{taskIds}";
-            });
-
-            File.WriteAllLines(FilePath, lines);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ошибка при сохранении проектов: {ex.Message}");
-        }
+        _projectStorage.SaveProjects(_projects);
     }
-
-    //безопасный методы работы с проектами
-
-
 
     public void AddTaskToProjectSafe(string? projectName, int taskId)
     {
-        if (string.IsNullOrEmpty(projectName)) return;//проверка string.IsNullOrEmpty(projectName) это защита от null или пустого имени
-        //автоматическое создание проекта
+        if (string.IsNullOrEmpty(projectName)) return;
+
         var project = FindProjectByName(projectName);
         if (project == null)
         {

@@ -1,19 +1,21 @@
 ﻿using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;//для коллекций
-using System.IO;//работа с файлом
-using System.Linq;
+//using System.IO;//работа с файлом
+using System.Linq;//Для работы с LINQ (Language Integrated Query) - технологии запросов к коллекциям и данным
 public class TaskManager //класс для управления задачами
 {
     private readonly List<ToDoTask> _tasks = new List<ToDoTask>();//коллекция задач
     private readonly HashSet<int> _usedIds = new HashSet<int>(); //коллекция айдишников
     private readonly Random _random = new Random();//рандомайзер для айди
-    private const string FilePath = "tasks.txt";//для сохранения
+    //private const string FilePath = "tasks.txt";//для сохранения
     private readonly ProjectManager _projectManager;//ссылка на менеджер проетов
+    private readonly ITaskStorage _taskStorage;//интерфейс для работы с хранилищем задач
 
     //конструктор
-    public TaskManager(ProjectManager projectManager)
+    public TaskManager(ITaskStorage taskStorage, ProjectManager projectManager)
     {
+        _taskStorage = taskStorage;
         _projectManager = projectManager;
         //установка обратной ссылки
         _projectManager.SetTaskManager(this);
@@ -40,7 +42,7 @@ public class TaskManager //класс для управления задачам
 
             if (existingProject != null)
             {
-                // ИСПРАВЛЕННЫЙ ВЫЗОВ - передаем название проекта, а не ID
+                //передаем название проекта, а не ID
                 _projectManager.AddTaskToProjectSafe(project, task.Id); // project - string, а не existingProject.Id - int
             }
         }
@@ -148,108 +150,46 @@ public class TaskManager //класс для управления задачам
     //загружает из файла
     private void LoadTasks()
     {
-        if (!File.Exists(FilePath)) return;
+        _tasks.Clear();
+        _usedIds.Clear();
 
-        foreach (string line in File.ReadAllLines(FilePath))
+        var loadedTasks = _taskStorage.LoadTasks();
+        foreach (var task in loadedTasks)
         {
-            if (string.IsNullOrWhiteSpace(line)) continue;
-
-            var parts = line.Split('|');
-            if (parts.Length < 4) continue;
-
-            try
+            if (!_usedIds.Contains(task.Id))
             {
-                ToDoTask task;
-                int id = int.Parse(parts[0]);
-                string description = parts[1];
-                DateTime dueDate = new DateTime(long.Parse(parts[2]));
-                bool isCompleted = bool.Parse(parts[3]);
-
-                //проверяем на дубликат 
-                if (_usedIds.Contains(id))
-                {
-                    Console.WriteLine($"Обнаружен дубликат ID: {id}. Задача будет пропущена.");
-                    continue;
-                }
-
-                //добавляем айди в коллекцию использованных
-                _usedIds.Add(id);
-
-                if (parts.Length == 6 && parts[4] == "Work")
-                {
-                    task = new WorkTask(id, description, dueDate, parts[5], isCompleted);
-                }
-                else if (parts.Length == 6 && parts[4] == "Personal")
-                {
-                    task = new PersonalTask(id, description, dueDate, int.Parse(parts[5]), isCompleted);
-                }
-                else
-                {
-                    task = new ToDoTask(id, description, dueDate, isCompleted);
-                }
-
                 _tasks.Add(task);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка при загрузке задачи: {ex.Message}");
+                _usedIds.Add(task.Id);
             }
         }
-
-        //после загрузки проверяем и исправляем дубликаты
-        FixDuplicateIds();
     }
 
     //сохраняет задачи в файл
     private void SaveTasks()
     {
-        try
-        {
-            var lines = _tasks.Select(x => //преобразование каждой задачив строку 
-            {
-                string typeInfo = x switch //определяет тип и добавляет к нужному типу
-                {
-                    WorkTask workTask => $"|Work|{workTask.Project}",
-                    PersonalTask personalTask => $"|Personal|{personalTask.Priority}",
-                    _ => "|Default"
-                };
-                //формирование строки
-                return $"{x.Id}|{x.Description}|{x.DueDate.Ticks}|{x.IsCompleted}{typeInfo}";
-            });
-            //записываем в файл для каждой задачи одна строка
-            File.WriteAllLines(FilePath, lines);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Ошибка при сохранении задач: {ex.Message}");
-        }
+        _taskStorage.SaveTasks(_tasks);
     }
 
-    //изменения задачи 
     public bool EditTask(int taskId, string? newDescription, DateTime? newDueDate, string? newProject, int? newPriority)
     {
         var task = FindTaskById(taskId);
         if (task == null) return false;
 
-        //запоминаем старый проект для рабочих задач
         string? oldProject = (task as WorkTask)?.Project;
         bool changesMade = false;
 
-        //изменение описания
-        if (!string.IsNullOrWhiteSpace(newDescription))
+        if (!string.IsNullOrWhiteSpace(newDescription))//обновление описания
         {
             task.Description = newDescription;
             changesMade = true;
         }
 
-        //изменение даты выполнения
-        if (newDueDate.HasValue)
+        if (newDueDate.HasValue)//обновление даты выполнения
         {
             task.DueDate = newDueDate.Value;
             changesMade = true;
         }
-
-        //изменение проекта для рабочих задач
+        //обновление проекта(для рабочих задач)
         if (task is WorkTask workTask && newProject != null)
         {
             if (string.IsNullOrWhiteSpace(newProject))
@@ -258,8 +198,7 @@ public class TaskManager //класс для управления задачам
             workTask.Project = newProject;
             changesMade = true;
         }
-
-        //изменение приоритета для личных задач
+        //обновление приоритета (для личных задач)
         if (task is PersonalTask personalTask && newPriority.HasValue)
         {
             if (newPriority < 1 || newPriority > 10)
@@ -268,8 +207,7 @@ public class TaskManager //класс для управления задачам
             personalTask.Priority = newPriority.Value;
             changesMade = true;
         }
-
-        //безопасное обновление привязки к проектам
+        //обновление связей с проектами
         UpdateProjectAssociation(taskId, task, oldProject, newProject);
 
         if (changesMade)

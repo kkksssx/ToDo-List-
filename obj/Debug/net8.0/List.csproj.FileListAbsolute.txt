@@ -13,3 +13,8 @@ D:\List\obj\Debug\net8.0\refint\List.dll
 D:\List\obj\Debug\net8.0\List.pdb
 D:\List\obj\Debug\net8.0\List.genruntimeconfig.cache
 D:\List\obj\Debug\net8.0\ref\List.dll
+D:\List\bin\Debug\net8.0\FluentValidation.dll
+D:\List\obj\Debug\net8.0\List.csproj.AssemblyReference.cache
+D:\List\obj\Debug\net8.0\List.csproj.Up2Date
+D:\List\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+D:\List\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll

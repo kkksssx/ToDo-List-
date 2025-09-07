@@ -3,12 +3,36 @@
   "WorkspaceRootPath": "D:\\List\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\projectfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:projectfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\projectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:projectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\projectvalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:projectvalidators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\reminderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:reminderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\taskfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:taskfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\taskmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:taskmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\tasktypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:tasktypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\taskvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,28 +43,40 @@
       "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:todotask.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\reminderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:reminderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\tasktypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:tasktypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\jsonfiletaskstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:jsonfiletaskstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\taskfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:taskfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\jsonfileprojectstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:jsonfileprojectstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\projectfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:projectfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\itaskstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:itaskstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\iprojectstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:iprojectstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\projectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:projectmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\inputservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:inputservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\customexceptions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:customexceptions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\inmemoryprojectstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:inmemoryprojectstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|d:\\list\\inmemorytaskstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA8DAFF9-ED4D-4003-B037-366A6762C536}|List.csproj|solutionrelative:inmemorytaskstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -50,71 +86,114 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "ProjectManager.cs",
-              "DocumentMoniker": "D:\\List\\ProjectManager.cs",
-              "RelativeDocumentMoniker": "ProjectManager.cs",
-              "ToolTip": "D:\\List\\ProjectManager.cs",
-              "RelativeToolTip": "ProjectManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAOQAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T16:07:20.837Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "ProjectFactory.cs",
-              "DocumentMoniker": "D:\\List\\ProjectFactory.cs",
-              "RelativeDocumentMoniker": "ProjectFactory.cs",
-              "ToolTip": "D:\\List\\ProjectFactory.cs",
-              "RelativeToolTip": "ProjectFactory.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAABJAAAAAAAAAA==",
+              "Title": "TaskTypes.cs",
+              "DocumentMoniker": "D:\\List\\TaskTypes.cs",
+              "RelativeDocumentMoniker": "TaskTypes.cs",
+              "ToolTip": "D:\\List\\TaskTypes.cs*",
+              "RelativeToolTip": "TaskTypes.cs*",
+              "ViewState": "AgIAACIAAAAAAAAAAAA0wAEAAABhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T15:56:03.942Z",
+              "WhenOpened": "2025-08-11T13:31:57.858Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
+              "Title": "ToDoTask.cs",
+              "DocumentMoniker": "D:\\List\\ToDoTask.cs",
+              "RelativeDocumentMoniker": "ToDoTask.cs",
+              "ToolTip": "D:\\List\\ToDoTask.cs*",
+              "RelativeToolTip": "ToDoTask.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-03T11:14:53.464Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "JsonFileTaskStorage.cs",
+              "DocumentMoniker": "D:\\List\\JsonFileTaskStorage.cs",
+              "RelativeDocumentMoniker": "JsonFileTaskStorage.cs",
+              "ToolTip": "D:\\List\\JsonFileTaskStorage.cs*",
+              "RelativeToolTip": "JsonFileTaskStorage.cs*",
+              "ViewState": "AgIAABkAAAAAAAAAAAAgwAcAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T18:39:17.419Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\List\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\List\\Program.cs*",
+              "RelativeToolTip": "Program.cs*",
+              "ViewState": "AgIAAMMBAAAAAAAAAAAUwAMAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-03T11:12:31.575Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "Project.cs",
               "DocumentMoniker": "D:\\List\\Project.cs",
               "RelativeDocumentMoniker": "Project.cs",
-              "ToolTip": "D:\\List\\Project.cs",
-              "RelativeToolTip": "Project.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAkwDIAAAAiAAAAAAAAAA==",
+              "ToolTip": "D:\\List\\Project.cs*",
+              "RelativeToolTip": "Project.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-22T15:54:54.617Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "TaskFactory.cs",
-              "DocumentMoniker": "D:\\List\\TaskFactory.cs",
-              "RelativeDocumentMoniker": "TaskFactory.cs",
-              "ToolTip": "D:\\List\\TaskFactory.cs",
-              "RelativeToolTip": "TaskFactory.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAwwDYAAAAaAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "ProjectFactory.cs",
+              "DocumentMoniker": "D:\\List\\ProjectFactory.cs",
+              "RelativeDocumentMoniker": "ProjectFactory.cs",
+              "ToolTip": "D:\\List\\ProjectFactory.cs",
+              "RelativeToolTip": "ProjectFactory.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwAQAAABJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-22T15:08:20.262Z",
+              "WhenOpened": "2025-08-22T15:56:03.942Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "TaskTypes.cs",
-              "DocumentMoniker": "D:\\List\\TaskTypes.cs",
-              "RelativeDocumentMoniker": "TaskTypes.cs",
-              "ToolTip": "D:\\List\\TaskTypes.cs",
-              "RelativeToolTip": "TaskTypes.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "ProjectManager.cs",
+              "DocumentMoniker": "D:\\List\\ProjectManager.cs",
+              "RelativeDocumentMoniker": "ProjectManager.cs",
+              "ToolTip": "D:\\List\\ProjectManager.cs*",
+              "RelativeToolTip": "ProjectManager.cs*",
+              "ViewState": "AgIAADcAAAAAAAAAAAAcwAQAAABbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-11T13:31:57.858Z",
+              "WhenOpened": "2025-08-22T16:07:20.837Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProjectValidators.cs",
+              "DocumentMoniker": "D:\\List\\ProjectValidators.cs",
+              "RelativeDocumentMoniker": "ProjectValidators.cs",
+              "ToolTip": "D:\\List\\ProjectValidators.cs*",
+              "RelativeToolTip": "ProjectValidators.cs*",
+              "ViewState": "AgIAACkAAAAAAAAAAAAIwAEAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-31T16:58:17.748Z",
               "EditorCaption": ""
             },
             {
@@ -123,68 +202,142 @@
               "Title": "ReminderService.cs",
               "DocumentMoniker": "D:\\List\\ReminderService.cs",
               "RelativeDocumentMoniker": "ReminderService.cs",
-              "ToolTip": "D:\\List\\ReminderService.cs",
-              "RelativeToolTip": "ReminderService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAABEAAAAAAAAAA==",
+              "ToolTip": "D:\\List\\ReminderService.cs*",
+              "RelativeToolTip": "ReminderService.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAABtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-11T13:31:28.441Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ToDoTask.cs",
-              "DocumentMoniker": "D:\\List\\ToDoTask.cs",
-              "RelativeDocumentMoniker": "ToDoTask.cs",
-              "ToolTip": "D:\\List\\ToDoTask.cs",
-              "RelativeToolTip": "ToDoTask.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAFAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "TaskFactory.cs",
+              "DocumentMoniker": "D:\\List\\TaskFactory.cs",
+              "RelativeDocumentMoniker": "TaskFactory.cs",
+              "ToolTip": "D:\\List\\TaskFactory.cs",
+              "RelativeToolTip": "TaskFactory.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwDEAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-03T11:14:53.464Z",
+              "WhenOpened": "2025-08-22T15:08:20.262Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\List\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\List\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAALQCAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-03T11:12:31.575Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "TaskManager.cs",
               "DocumentMoniker": "D:\\List\\TaskManager.cs",
               "RelativeDocumentMoniker": "TaskManager.cs",
-              "ToolTip": "D:\\List\\TaskManager.cs",
-              "RelativeToolTip": "TaskManager.cs",
-              "ViewState": "AgIAADgAAAAAAAAAAAAwwD8BAABIAAAAAAAAAA==",
+              "ToolTip": "D:\\List\\TaskManager.cs*",
+              "RelativeToolTip": "TaskManager.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-03T11:13:54.064Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "TaskValidator.cs",
               "DocumentMoniker": "D:\\List\\TaskValidator.cs",
               "RelativeDocumentMoniker": "TaskValidator.cs",
-              "ToolTip": "D:\\List\\TaskValidator.cs",
-              "RelativeToolTip": "TaskValidator.cs",
-              "ViewState": "AgIAAAwBAAAAAAAAAAAwwHgAAAAAAAAAAAAAAA==",
+              "ToolTip": "D:\\List\\TaskValidator.cs*",
+              "RelativeToolTip": "TaskValidator.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-20T11:01:05.058Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "JsonFileProjectStorage.cs",
+              "DocumentMoniker": "D:\\List\\JsonFileProjectStorage.cs",
+              "RelativeDocumentMoniker": "JsonFileProjectStorage.cs",
+              "ToolTip": "D:\\List\\JsonFileProjectStorage.cs*",
+              "RelativeToolTip": "JsonFileProjectStorage.cs*",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAgwCMAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T18:39:35.348Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ITaskStorage.cs",
+              "DocumentMoniker": "D:\\List\\ITaskStorage.cs",
+              "RelativeDocumentMoniker": "ITaskStorage.cs",
+              "ToolTip": "D:\\List\\ITaskStorage.cs*",
+              "RelativeToolTip": "ITaskStorage.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T18:37:40.374Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "IProjectStorage.cs",
+              "DocumentMoniker": "D:\\List\\IProjectStorage.cs",
+              "RelativeDocumentMoniker": "IProjectStorage.cs",
+              "ToolTip": "D:\\List\\IProjectStorage.cs*",
+              "RelativeToolTip": "IProjectStorage.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T18:38:05.664Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "InputService.cs",
+              "DocumentMoniker": "D:\\List\\InputService.cs",
+              "RelativeDocumentMoniker": "InputService.cs",
+              "ToolTip": "D:\\List\\InputService.cs*",
+              "RelativeToolTip": "InputService.cs*",
+              "ViewState": "AgIAAI8AAAAAAAAAAAAAwIkAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-31T16:59:34.055Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "CustomExceptions.cs",
+              "DocumentMoniker": "D:\\List\\CustomExceptions.cs",
+              "RelativeDocumentMoniker": "CustomExceptions.cs",
+              "ToolTip": "D:\\List\\CustomExceptions.cs*",
+              "RelativeToolTip": "CustomExceptions.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-31T17:12:28.126Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "InMemoryProjectStorage.cs",
+              "DocumentMoniker": "D:\\List\\InMemoryProjectStorage.cs",
+              "RelativeDocumentMoniker": "InMemoryProjectStorage.cs",
+              "ToolTip": "D:\\List\\InMemoryProjectStorage.cs*",
+              "RelativeToolTip": "InMemoryProjectStorage.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T18:38:56.452Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "InMemoryTaskStorage.cs",
+              "DocumentMoniker": "D:\\List\\InMemoryTaskStorage.cs",
+              "RelativeDocumentMoniker": "InMemoryTaskStorage.cs",
+              "ToolTip": "D:\\List\\InMemoryTaskStorage.cs*",
+              "RelativeToolTip": "InMemoryTaskStorage.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-06T18:38:30.761Z",
+              "EditorCaption": ""
             }
           ]
         }

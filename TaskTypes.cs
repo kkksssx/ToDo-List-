@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;//Атрибуты для управления JSON сериализацией/десериализацией
 public enum TaskType //тип определитель, который помогает не допускать ошибки
 {                    //редактор будет до сборки говорить, что ты дурачок если опечатаешься 
     Default,
@@ -10,10 +11,13 @@ public class WorkTask : ToDoTask
 {
     public string Project { get; set; }
 
+    [JsonConstructor]//атрибут для JSON десериализации (чтения из JSON)
+
+    //добавляет свойство название проекта
     public WorkTask(int id, string description, DateTime dueDate, string project, bool isCompleted = false)
         : base(id, description, dueDate, isCompleted) //принимает и преедаёт параметры в базовый 
     {
-        TaskValidator.ValidateProject(project);
+        TaskValidationService.ValidateProject(project);
         Project = project;
     }
 
@@ -32,10 +36,12 @@ public class PersonalTask : ToDoTask
 {
     public int Priority { get; set; }
 
+    [JsonConstructor]//атрибут для JSON десериализации (чтения из JSON)
+
     public PersonalTask(int id, string description, DateTime dueDate, int priority, bool isCompleted = false)
         : base(id, description, dueDate, isCompleted)
     {
-        TaskValidator.ValidatePriority(priority);
+        TaskValidationService.ValidatePriority(priority);
         Priority = priority;
     }
 

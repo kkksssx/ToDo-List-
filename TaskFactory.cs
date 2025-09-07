@@ -26,8 +26,8 @@ public static class TaskFactory//фабричный паттерн = центр�
     //для обычной задачи
     private static ToDoTask CreateDefaultTask(int id, string description, DateTime dueDate, bool isCompleted)
     {
-        TaskValidator.ValidateDescription(description);
-        TaskValidator.ValidateDueDate(dueDate);
+        TaskValidationService.ValidateDescription(description);
+        TaskValidationService.ValidateDueDate(dueDate);
 
         return new ToDoTask(id, description, dueDate, isCompleted);
     }
@@ -35,9 +35,9 @@ public static class TaskFactory//фабричный паттерн = центр�
     //для рабочей
     private static WorkTask CreateWorkTask(int id, string description, DateTime dueDate, string project, bool isCompleted)
     {
-        TaskValidator.ValidateDescription(description);
-        TaskValidator.ValidateDueDate(dueDate);
-        TaskValidator.ValidateProject(project);
+        TaskValidationService.ValidateDescription(description);
+        TaskValidationService.ValidateDueDate(dueDate);
+        TaskValidationService.ValidateProject(project);
 
         return new WorkTask(id, description, dueDate, project, isCompleted);
     }
@@ -45,9 +45,9 @@ public static class TaskFactory//фабричный паттерн = центр�
     //для личной
     private static PersonalTask CreatePersonalTask(int id, string description, DateTime dueDate, int priority, bool isCompleted)
     {
-        TaskValidator.ValidateDescription(description);
-        TaskValidator.ValidateDueDate(dueDate);
-        TaskValidator.ValidatePriority(priority);
+        TaskValidationService.ValidateDescription(description);
+        TaskValidationService.ValidateDueDate(dueDate);
+        TaskValidationService.ValidatePriority(priority);
 
         return new PersonalTask(id, description, dueDate, priority, isCompleted);
     }

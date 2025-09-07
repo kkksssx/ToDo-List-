@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Generic;//коллекций
+using System.Linq;//Для работы с LINQ (Language Integrated Query) - технологии запросов к коллекциям и данным
+using System.Text.Json.Serialization;//Атрибуты для управления JSON сериализацией/десериализацией
+
 
 //класс проекта
 public class Project
@@ -12,9 +14,11 @@ public class Project
     public DateTime? Deadline { get; set; }
     public int Priority { get; set; }
     public bool IsCompleted { get; set; }
+    [JsonIgnore] //атрибут указывает что это свойство не будет сериализоваться в JSON
     public List<int> TaskIds { get; } = new List<int>(); // айди задач проекта
 
     //конструктор проекта
+    [JsonConstructor] //атрибут для JSON десериализации (чтения из JSON)
     public Project(int id, string name, string description, DateTime? deadline = null, int priority = 1, bool isCompleted = false)
     {
         Id = id;
